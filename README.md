@@ -110,6 +110,16 @@ local token and:
 scripts/publish-workspace.sh --publish
 ```
 
+The dry-run mode is safe before bootstrap:
+
+```bash
+scripts/publish-workspace.sh --dry-run
+```
+
+It runs `cargo publish --dry-run` for each crate in dependency order, using
+temporary local registry patches so unpublished workspace dependencies can be
+verified without uploading anything.
+
 After the first release, configure crates.io trusted publishing for every crate:
 
 - owner: `huitseeker`;

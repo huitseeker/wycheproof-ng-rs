@@ -18,25 +18,70 @@ repo_root="$(cd "${script_dir}/.." && pwd)"
 packages=(
   wycheproof-ng-core
   wycheproof-ng-aead
-  wycheproof-ng-bls
+  wycheproof-ng-symmetric
+  wycheproof-ng-fpe
+  wycheproof-ng-ecdsa
   wycheproof-ng-dh
   wycheproof-ng-dsa
-  wycheproof-ng-ecdsa
   wycheproof-ng-eddsa
-  wycheproof-ng-fpe
-  wycheproof-ng-kdf-jose
-  wycheproof-ng-mldsa
-  wycheproof-ng-mlkem
+  wycheproof-ng-bls
   wycheproof-ng-rsa-encryption
   wycheproof-ng-rsa-signature
-  wycheproof-ng-symmetric
+  wycheproof-ng-mlkem
+  wycheproof-ng-mldsa
+  wycheproof-ng-kdf-jose
   wycheproof-ng
+)
+
+families=(
+  wycheproof-ng-aead
+  wycheproof-ng-symmetric
+  wycheproof-ng-fpe
+  wycheproof-ng-ecdsa
+  wycheproof-ng-dh
+  wycheproof-ng-dsa
+  wycheproof-ng-eddsa
+  wycheproof-ng-bls
+  wycheproof-ng-rsa-encryption
+  wycheproof-ng-rsa-signature
+  wycheproof-ng-mlkem
+  wycheproof-ng-mldsa
+  wycheproof-ng-kdf-jose
 )
 
 cd "${repo_root}"
 
+dry_run_patch_args() {
+  local package="$1"
+
+  case "${package}" in
+    wycheproof-ng-core)
+      return 0
+      ;;
+    wycheproof-ng)
+      printf '%s\n' --config 'patch.crates-io.wycheproof-ng-core.path="crates/core"'
+      for family in "${families[@]}"; do
+        printf '%s\n' --config "patch.crates-io.${family}.path=\"crates/${family#wycheproof-ng-}\""
+      done
+      ;;
+    *)
+      printf '%s\n' --config 'patch.crates-io.wycheproof-ng-core.path="crates/core"'
+      ;;
+  esac
+}
+
 if [[ "${mode}" == "--dry-run" ]]; then
-  cargo package --workspace --exclude xtask --allow-dirty "$@"
+  for package in "${packages[@]}"; do
+    patch_args=()
+    while IFS= read -r arg; do
+      patch_args+=("${arg}")
+    done < <(dry_run_patch_args "${package}")
+    if ((${#patch_args[@]})); then
+      cargo publish -p "${package}" --dry-run --allow-dirty "${patch_args[@]}" "$@"
+    else
+      cargo publish -p "${package}" --dry-run --allow-dirty "$@"
+    fi
+  done
   exit 0
 fi
 
