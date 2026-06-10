@@ -41,6 +41,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+        with:
+          toolchain: stable
       - run: scripts/verify-wycheproof-data-offline.sh
       - run: scripts/verify-wycheproof-data.sh
 
@@ -54,6 +56,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+        with:
+          toolchain: stable
       - run: scripts/check-wycheproof-drift.sh
 
   rustfmt:
@@ -65,6 +69,7 @@ jobs:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
+          toolchain: stable
           components: rustfmt
       - run: cargo fmt --all -- --check
 
@@ -77,6 +82,7 @@ jobs:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
+          toolchain: stable
           components: clippy
       - run: cargo clippy --workspace --all-targets -- --deny warnings
 
@@ -106,6 +112,8 @@ jobs:
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+        with:
+          toolchain: stable
       - run: scripts/verify-minimal-imports.sh
 
   package-sizes:
@@ -116,5 +124,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+        with:
+          toolchain: stable
       - run: scripts/verify-package-sizes.sh
       - run: scripts/publish-workspace.sh --dry-run
