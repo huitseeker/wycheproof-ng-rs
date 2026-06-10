@@ -31,12 +31,13 @@ jobs:
     env:
       RELEASE_TAG: ${{ github.event.release.tag_name || inputs.version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@9f698171ed81b15d1823a05fc7211befd50c8ae0 # v6.0.3
         with:
           fetch-depth: 0
           ref: ${{ github.event.release.tag_name || inputs.version }}
+          persist-credentials: false
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
         with:
           components: clippy, rustfmt
 
@@ -84,7 +85,7 @@ jobs:
 
       - name: Authenticate to crates.io
         id: auth
-        uses: rust-lang/crates-io-auth-action@v1
+        uses: rust-lang/crates-io-auth-action@9f93ac2286e4f1a6e86b5f77b890fda4566f5c03 # main
 
       - name: Publish
         env:
