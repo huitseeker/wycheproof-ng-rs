@@ -110,6 +110,9 @@ local token and:
 scripts/publish-workspace.sh --publish
 ```
 
+Use [docs/release-bootstrap.md](docs/release-bootstrap.md) for the full
+bootstrap checklist.
+
 The dry-run mode is safe before bootstrap:
 
 ```bash
