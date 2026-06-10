@@ -89,16 +89,43 @@ crate_version() {
   cargo pkgid -p "$1" | sed 's/.*@//'
 }
 
-version_exists() {
+version_status() {
   local package="$1"
   local version="$2"
-  curl -fsSL \
+
+  curl -sS \
+    -o /dev/null \
+    -w '%{http_code}' \
     -A "wycheproof-ng-rs-release-script" \
     --retry 3 \
     --connect-timeout 15 \
     --max-time 60 \
     "https://crates.io/api/v1/crates/${package}/${version}" \
-    >/dev/null
+    || return 1
+}
+
+version_state() {
+  local package="$1"
+  local version="$2"
+  local status
+
+  status="$(version_status "${package}" "${version}")" || {
+    echo "failed to query crates.io for ${package}@${version}" >&2
+    return 2
+  }
+
+  case "${status}" in
+    200)
+      echo "exists"
+      ;;
+    404)
+      echo "missing"
+      ;;
+    *)
+      echo "unexpected crates.io status for ${package}@${version}: ${status}" >&2
+      return 2
+      ;;
+  esac
 }
 
 wait_for_version() {
@@ -106,9 +133,11 @@ wait_for_version() {
   local version="$2"
   local attempts="${PUBLISH_INDEX_WAIT_ATTEMPTS:-30}"
   local sleep_seconds="${PUBLISH_INDEX_SETTLE_SECONDS:-20}"
+  local state
 
   for _ in $(seq 1 "${attempts}"); do
-    if version_exists "${package}" "${version}"; then
+    state="$(version_state "${package}" "${version}")" || return 1
+    if [[ "${state}" == "exists" ]]; then
       return 0
     fi
     sleep "${sleep_seconds}"
@@ -120,7 +149,8 @@ wait_for_version() {
 
 for package in "${packages[@]}"; do
   version="$(crate_version "${package}")"
-  if version_exists "${package}" "${version}"; then
+  state="$(version_state "${package}" "${version}")" || exit 1
+  if [[ "${state}" == "exists" ]]; then
     echo "${package}@${version} already exists on crates.io; skipping"
     continue
   fi
