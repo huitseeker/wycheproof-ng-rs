@@ -113,24 +113,24 @@ scripts/publish-workspace.sh --publish
 Use [docs/release-bootstrap.md](docs/release-bootstrap.md) for the full
 bootstrap checklist.
 
-The dry-run mode is safe before bootstrap:
+The dry-run mode is safe to run before a release:
 
 ```bash
 scripts/publish-workspace.sh --dry-run
 ```
 
 It runs `cargo publish --dry-run` for each crate in dependency order, using
-temporary local registry patches so unpublished workspace dependencies can be
-verified without uploading anything.
+temporary local registry patches so workspace dependencies can be verified
+without uploading anything.
 
-After the first release, configure crates.io trusted publishing for every crate:
+crates.io trusted publishing is configured for every crate:
 
 - owner: `huitseeker`;
 - repository: `huitseeker/wycheproof-ng-rs`;
 - workflow: `release.yml`;
 - environment: `crates-io`.
 
-Subsequent releases should use the protected GitHub Actions release workflow.
+Subsequent releases use the protected GitHub Actions release workflow.
 
 ## Migration
 
