@@ -25,6 +25,7 @@ define_test_flags!(
     InvalidHintsEncoding,
     InvalidPrivateKey,
     InvalidContext,
+    InvalidSignature,
     ManySteps,
     ModifiedSignature,
     SampleNttEdgeCase,
