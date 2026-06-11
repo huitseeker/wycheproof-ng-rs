@@ -1,6 +1,6 @@
 [package]
 name = "wycheproof-ng-core"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Jack Lloyd <jack@randombit.net>", "Francois Garillot <francois@garillot.net>"]
 license = "Apache-2.0"

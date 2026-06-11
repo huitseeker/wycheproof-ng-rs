@@ -34,6 +34,7 @@ define_test_flags!(
     ManySteps,
     MissingMessage,
     NoCofactor,
+    Randomized,
     SampleNttEdgeCase,
     ValidSignature,
     WrongSizedSeed,
@@ -53,6 +54,7 @@ define_test_group!(
 define_test!(
     "msg" => msg: Option<ByteString>,
     mu: Option<ByteString>,
+    rnd: Option<ByteString>,
     sig: ByteString,
     ctx: Option<ByteString>,
 );

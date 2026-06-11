@@ -1,0 +1,5 @@
+[allowlist]
+description = "Allow public Wycheproof cryptographic test-vector material."
+paths = [
+  '''^crates/[^/]+/src/data/.*\.json$''',
+]
