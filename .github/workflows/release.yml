@@ -75,6 +75,12 @@ jobs:
       - name: Docs
         run: cargo doc --workspace --no-deps
 
+      - name: Install cargo-deny
+        run: cargo install cargo-deny --locked --version 0.19.6
+
+      - name: Supply-chain policy
+        run: cargo deny check
+
       - name: Minimal downstream imports
         run: scripts/verify-minimal-imports.sh
 
