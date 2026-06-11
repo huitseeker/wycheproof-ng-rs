@@ -1,0 +1,95 @@
+name: upstream drift issue
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "31 9 * * 1"
+
+permissions:
+  contents: read
+
+env:
+  CARGO_NET_GIT_FETCH_WITH_CLI: true
+  ISSUE_TITLE: "Upstream Wycheproof vectors have changed"
+
+jobs:
+  check:
+    name: check upstream drift
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          persist-credentials: false
+
+      - uses: dtolnay/rust-toolchain@3c5f7ea28cd621ae0bf5283f0e981fb97b8a7af9 # master
+        with:
+          toolchain: stable
+
+      - name: Check upstream drift
+        id: drift
+        run: |
+          set +e
+          scripts/check-wycheproof-drift.sh > drift.log 2>&1
+          status="$?"
+          set -e
+
+          cat drift.log
+
+          if [[ "${status}" == "0" ]]; then
+            echo "drift=false" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          if [[ "${status}" == "20" ]]; then
+            echo "drift=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          echo "drift check failed with unexpected status ${status}" >&2
+          exit "${status}"
+
+      - name: Open or update drift issue
+        if: ${{ steps.drift.outputs.drift == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          {
+            echo "The scheduled upstream drift check found differences between the committed vector set and current C2SP Wycheproof HEAD."
+            echo
+            echo "- Workflow run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+            echo "- Check command: \`scripts/check-wycheproof-drift.sh\`"
+            echo "- Local pinned source: \`scripts/wycheproof-source.env\`"
+            echo
+            echo "Refresh path:"
+            echo
+            echo "\`\`\`sh"
+            echo "scripts/sync-wycheproof-data.sh"
+            echo "cargo test --workspace --all-targets"
+            echo "scripts/publish-workspace.sh --dry-run"
+            echo "\`\`\`"
+            echo
+            echo "Drift output:"
+            echo
+            echo "\`\`\`text"
+            tail -n 200 drift.log
+            echo "\`\`\`"
+          } > drift-issue.md
+
+          gh issue list --state open --limit 100 --json number,title > open-issues.json
+          existing="$(
+            jq -r --arg title "${ISSUE_TITLE}" \
+              '.[] | select(.title == $title) | .number' \
+              open-issues.json \
+              | head -n 1
+          )"
+
+          if [[ -n "${existing}" ]]; then
+            gh issue comment "${existing}" --body-file drift-issue.md
+          else
+            gh issue create --title "${ISSUE_TITLE}" --body-file drift-issue.md
+          fi
