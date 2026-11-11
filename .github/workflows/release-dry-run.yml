@@ -36,6 +36,9 @@ jobs:
       - name: Verify vectors against pinned upstream
         run: scripts/verify-wycheproof-data.sh
 
+      - name: Check upstream drift
+        run: scripts/check-wycheproof-drift.sh
+
       - name: Format
         run: cargo fmt --all -- --check
 
