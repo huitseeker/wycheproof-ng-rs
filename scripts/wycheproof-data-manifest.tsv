@@ -20,6 +20,18 @@ camellia_ccm_test.json	crates/aead/src/data
 chacha20_poly1305_test.json	crates/aead/src/data
 c2sp_chunked_encryption_aes_128_gcm_test.json	crates/aead/src/data
 c2sp_chunked_encryption_aes_256_gcm_test.json	crates/aead/src/data
+hpke_mlkem1024_decrypt_test.json	crates/aead/src/data
+hpke_mlkem1024_encap_test.json	crates/aead/src/data
+hpke_mlkem1024_sequence_test.json	crates/aead/src/data
+hpke_mlkem512_decrypt_test.json	crates/aead/src/data
+hpke_mlkem512_encap_test.json	crates/aead/src/data
+hpke_mlkem512_sequence_test.json	crates/aead/src/data
+hpke_mlkem768_decrypt_test.json	crates/aead/src/data
+hpke_mlkem768_encap_test.json	crates/aead/src/data
+hpke_mlkem768_sequence_test.json	crates/aead/src/data
+hpke_x25519_decrypt_test.json	crates/aead/src/data
+hpke_x25519_encap_test.json	crates/aead/src/data
+hpke_x25519_sequence_test.json	crates/aead/src/data
 morus1280_test.json	crates/aead/src/data
 morus640_test.json	crates/aead/src/data
 seed_ccm_test.json	crates/aead/src/data
@@ -27,6 +39,7 @@ seed_gcm_test.json	crates/aead/src/data
 sm4_ccm_test.json	crates/aead/src/data
 sm4_gcm_test.json	crates/aead/src/data
 xchacha20_poly1305_test.json	crates/aead/src/data
+xchacha20_poly1305_secretstream_test.json	crates/aead/src/data
 bls_hash_to_g2_test.json	crates/bls/src/data
 bls_sig_g2_aggregate_verify_test.json	crates/bls/src/data
 bls_sig_g2_basic_verify_test.json	crates/bls/src/data
@@ -60,6 +73,8 @@ ecdh_sect409k1_test.json	crates/dh/src/data
 ecdh_sect409r1_test.json	crates/dh/src/data
 ecdh_sect571k1_test.json	crates/dh/src/data
 ecdh_sect571r1_test.json	crates/dh/src/data
+ed25519_to_x25519_test.json	crates/dh/src/data
+ristretto255_scalar_invert_test.json	crates/dh/src/data
 x25519_asn_test.json	crates/dh/src/data
 x25519_jwk_test.json	crates/dh/src/data
 x25519_pem_test.json	crates/dh/src/data
@@ -319,6 +334,7 @@ aria_wrap_test.json	crates/symmetric/src/data
 camellia_cbc_pkcs5_test.json	crates/symmetric/src/data
 camellia_cmac_test.json	crates/symmetric/src/data
 camellia_wrap_test.json	crates/symmetric/src/data
+chacha20_counter_test.json	crates/symmetric/src/data
 hmac_sha1_test.json	crates/symmetric/src/data
 hmac_sha224_test.json	crates/symmetric/src/data
 hmac_sha256_test.json	crates/symmetric/src/data

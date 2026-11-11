@@ -12,5 +12,13 @@ fn parses_all_dh_vectors() -> Result<(), wycheproof_ng_core::WycheproofError> {
         let _kat = wycheproof_ng_dh::xdh::TestSet::load(test)?;
     }
 
+    for test in wycheproof_ng_dh::eddsa_to_xdh::TestName::all() {
+        let _kat = wycheproof_ng_dh::eddsa_to_xdh::TestSet::load(test)?;
+    }
+
+    for test in wycheproof_ng_dh::ristretto::TestName::all() {
+        let _kat = wycheproof_ng_dh::ristretto::TestSet::load(test)?;
+    }
+
     Ok(())
 }

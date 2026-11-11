@@ -16,5 +16,9 @@ fn parses_all_symmetric_vectors() -> Result<(), wycheproof_ng_core::WycheproofEr
         let _kat = wycheproof_ng_symmetric::mac_with_nonce::TestSet::load(test)?;
     }
 
+    for test in wycheproof_ng_symmetric::stream_cipher::TestName::all() {
+        let _kat = wycheproof_ng_symmetric::stream_cipher::TestSet::load(test)?;
+    }
+
     Ok(())
 }

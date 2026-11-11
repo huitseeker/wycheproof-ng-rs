@@ -88,6 +88,9 @@ pub struct RsaPrivate {
     pub d2: Option<LargeInteger>,
     #[serde(rename = "coefficient", default)]
     pub c: Option<LargeInteger>,
+    /// Additional prime, exponent, and CRT coefficient triples for multi-prime RSA.
+    #[serde(rename = "otherPrimeInfos", default)]
+    pub other_prime_infos: Vec<[LargeInteger; 3]>,
 }
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq, serde_derive::Deserialize)]

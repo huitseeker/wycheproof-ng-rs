@@ -4,13 +4,6 @@ use wycheproof_ng_core::*;
 
 define_test_set!("RSA OAEP decrypt", "rsaes_oaep_decrypt_schema_v1.json");
 
-/*
-Currently skips:
-
-rsa_three_primes_oaep_2048_sha1_mgf1sha1_test.json
-rsa_three_primes_oaep_3072_sha224_mgf1sha224_test.json
-rsa_three_primes_oaep_4096_sha256_mgf1sha256_test.json
-*/
 define_test_set_names!(
     Rsa2048Sha1Mgf1Sha1 => "rsa_oaep_2048_sha1_mgf1sha1",
     Rsa2048Sha224Mgf1Sha1 => "rsa_oaep_2048_sha224_mgf1sha1",
@@ -34,6 +27,9 @@ define_test_set_names!(
     Rsa4096Sha512Mgf1Sha1 => "rsa_oaep_4096_sha512_mgf1sha1",
     Rsa4096Sha512Mgf1Sha512 => "rsa_oaep_4096_sha512_mgf1sha512",
     RsaMisc => "rsa_oaep_misc",
+    RsaThreePrimes2048Sha1Mgf1Sha1 => "rsa_three_primes_oaep_2048_sha1_mgf1sha1",
+    RsaThreePrimes3072Sha224Mgf1Sha224 => "rsa_three_primes_oaep_3072_sha224_mgf1sha224",
+    RsaThreePrimes4096Sha256Mgf1Sha256 => "rsa_three_primes_oaep_4096_sha256_mgf1sha256",
 );
 
 define_algorithm_map!("RSAES-OAEP" => RsaOaep);
