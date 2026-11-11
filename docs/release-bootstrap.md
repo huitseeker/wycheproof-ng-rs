@@ -44,6 +44,7 @@ cargo test --workspace --all-targets
 cargo doc --workspace --no-deps
 scripts/verify-wycheproof-data-offline.sh
 scripts/verify-wycheproof-data.sh
+scripts/check-wycheproof-drift.sh
 scripts/verify-minimal-imports.sh
 scripts/verify-package-sizes.sh
 scripts/publish-workspace.sh --dry-run
