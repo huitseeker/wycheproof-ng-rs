@@ -17,8 +17,10 @@ define_test_flags!(
     InvalidSignature,
     "Ktv" => KnownTestVector,
     "InvalidKtv" => InvalidKnownTestVector,
+    MixedOrderPublicKey,
     SignatureMalleability,
     SignatureWithGarbage,
+    SmallOrderPublicKey,
     TinkOverflow,
     TruncatedSignature,
     Valid,
@@ -29,7 +31,7 @@ define_test_group_type_id!(
 );
 
 define_test_group!(
-    "publicKeyJwk" => jwk: EddsaPublicJwk,
+    "publicKeyJwk" => jwk: Option<EddsaPublicJwk>,
     "publicKey" => key: EddsaPublic,
     "publicKeyDer" => der: ByteString,
     "publicKeyPem" => pem: String,
