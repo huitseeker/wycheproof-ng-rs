@@ -105,8 +105,10 @@ gh workflow run "release dry run" \
   --ref main
 ```
 
-Wait for the workflow to pass. It only verifies and uploads package artifacts,
-so it does not require environment approval.
+After artifact checks pass, approve the `authorize release` job in the
+`release` environment. Wait for the workflow to pass before creating the tag.
+The tag rule requires that approved deployment at the release commit. PR
+dry runs verify artifacts without requesting approval.
 
 For the first trusted-publishing proof, bump every crate to the next patch
 version in a pull request, tag that commit after it lands, create a GitHub

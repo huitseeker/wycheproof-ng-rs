@@ -71,3 +71,12 @@ jobs:
         with:
           name: crates
           path: target/package/*.crate
+
+  authorize-release:
+    name: authorize release
+    if: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    needs: release-dry-run
+    runs-on: ubuntu-24.04
+    environment: release
+    steps:
+      - run: echo "Release deployment approved."
