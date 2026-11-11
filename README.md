@@ -8,9 +8,9 @@ plumbing.
 
 The fork starts from the `updates` branch of
 [`randombit/wycheproof-rs`](https://github.com/randombit/wycheproof-rs), not
-from the last published `wycheproof` crate. Its first releases track C2SP
-Wycheproof v1 test vectors from commit
-`75ede73a39b8517b2a06c8115dfbcd364479796c`.
+from the last published `wycheproof` crate. Version 0.4.0 bundles all 359 C2SP
+Wycheproof v1 vector files from commit
+`dab4ea2ed021eb633874959ca601004f3457d911`.
 
 This repository keeps the Apache-2.0 license. See [NOTICE.md](NOTICE.md) for
 attribution to the original crate author and upstream vector source.
@@ -24,11 +24,11 @@ families they need and avoid additive feature-resolution surprises.
 | Crate | Contents |
 |---|---|
 | `wycheproof-ng-core` | Shared errors and decoded byte wrappers, with result types and deserialization helpers. |
-| `wycheproof-ng-aead` | AEAD and DAEAD vectors, including C2SP chunked encryption. |
-| `wycheproof-ng-symmetric` | Block cipher and key wrap vectors, plus MAC vectors with or without nonces. |
+| `wycheproof-ng-aead` | AEAD and DAEAD vectors, including HPKE, Secretstream, and C2SP chunked encryption. |
+| `wycheproof-ng-symmetric` | Block and stream cipher vectors, key wrap vectors, and MAC vectors with or without nonces. |
 | `wycheproof-ng-fpe` | Format-preserving encryption vectors. |
 | `wycheproof-ng-ecdsa` | ECDSA vectors. |
-| `wycheproof-ng-dh` | Elliptic-curve and XDH key-agreement vectors. |
+| `wycheproof-ng-dh` | Elliptic-curve and XDH vectors, Edwards key conversion, and Ristretto scalar tests. |
 | `wycheproof-ng-dsa` | DSA vectors. |
 | `wycheproof-ng-eddsa` | Ed25519 and Ed448 vectors. |
 | `wycheproof-ng-bls` | BLS vectors. |
@@ -88,7 +88,10 @@ security-relevant vector changes land upstream. Every data refresh should be a
 pull request that runs:
 
 ```bash
+# Update UPSTREAM_REF in scripts/wycheproof-source.env first.
+# Add manifest entries and loaders for any new vector files.
 scripts/sync-wycheproof-data.sh
+scripts/check-wycheproof-drift.sh
 scripts/verify-minimal-imports.sh
 scripts/verify-package-sizes.sh
 scripts/publish-workspace.sh --dry-run
@@ -97,6 +100,10 @@ scripts/publish-workspace.sh --dry-run
 Each published crate should stay below an `8 MiB` compressed `.crate` budget. If
 a family approaches that budget, split that family before publishing the next
 upstream refresh.
+
+CI checks upstream drift on every pull request and scheduled run. A mismatch
+fails CI and release validation. The weekly notification workflow opens or
+updates an issue when the bundled vectors fall behind.
 
 ## Releases
 
@@ -150,14 +157,20 @@ wycheproof = "0.6"
 use the umbrella crate:
 
 ```toml
-wycheproof-ng = "0.3"
+wycheproof-ng = "0.4"
 ```
 
 For one vector family, depend directly on that family crate:
 
 ```toml
-wycheproof-ng-ecdsa = "0.3"
+wycheproof-ng-ecdsa = "0.4"
 ```
 
 This avoids additive feature resolution. Depending on ECDSA vectors will not
 compile unrelated vector families.
+
+When upgrading from 0.3, handle the optional `eddsa::TestGroup::jwk` field.
+Some upstream Ed25519 groups provide only the raw key and its DER and PEM
+encodings. Code that constructs `RsaPrivate` values must also provide the new
+`other_prime_infos` field, using an empty vector for a two-prime key. See
+[CHANGELOG.md](CHANGELOG.md) for the new loaders.

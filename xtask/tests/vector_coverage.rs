@@ -57,7 +57,7 @@ fn every_manifest_entry_has_a_public_loader() {
         wycheproof_ng::symmetric::stream_cipher,
     );
 
-    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("..");
     let manifest = std::fs::read_to_string(root.join("scripts/wycheproof-data-manifest.tsv"))
         .expect("read vector manifest");
     for line in manifest.lines() {
